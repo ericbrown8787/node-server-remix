@@ -1,34 +1,34 @@
-const http = require('http');
-const fs = require('fs');
+const express = require('express');
+const nunjucks = require('nunjucks');
+
+const app = express();
+
+nunjucks.configure('views', {
+  autoescape: true,
+  express: app,
+});
 
 const PORT = process.env.PORT || 3000;
 
-const server = http.createServer((req, res) => {
-  res.setHeader('Content-Type', 'text/html');
+app.use(express.static('public'));
+app.set('view engine', 'nunjucks');
 
-  let path = './';
-  switch (req.url) {
-    case '/':
-      path += 'index.html';
-      res.statusCode = 200;
-      break;
-    case '/about':
-      path += 'about.html';
-      res.statusCode = 200;
-      break;
-    default:
-      path += '404.html';
-      res.statusCode = 404;
-      break;
-  }
-
-  fs.readFile(path, (err, data) => {
-    if (err) {
-      console.error(err);
-      res.end();
-    } else {
-      res.end(data);
-    }
-  });
+app.get('/', async (req, res) => {
+  res.render('index.njk');
 });
-server.listen(PORT, () => console.log(`Server is listening on port ${PORT}`));
+
+app.get('/info', async (req, res) => {
+  res.render('info.njk');
+});
+
+app.get('/404', async (req, res) => {
+  res.render('index.njk');
+});
+
+app.use((req, res) => {
+  res.status(404).render(
+    '404.njk',
+  );
+});
+
+app.listen(PORT, () => { console.log(`Server listening on port ${PORT}`); });
