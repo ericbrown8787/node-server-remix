@@ -13,6 +13,7 @@ nunjucks.configure('views', {
 const PORT = process.env.PORT || 3000;
 
 app.use(express.static('public'));
+// app.use(express.static('roll-a-ball'));
 app.set('view engine', 'nunjucks');
 
 // ======Render correct pages======
@@ -23,6 +24,10 @@ app.get('/', async (req, res) => {
 app.get('/info', async (req, res) => {
   res.render('info.njk');
 });
+
+// app.get('/game', async (req, res) => {
+//   res.send('/roll-a-ball/index.html');
+// });
 
 // app.get('/404', async (req, res) => {
 //   res.render('index.njk');
