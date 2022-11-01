@@ -17,21 +17,13 @@ app.use(express.static('public'));
 app.set('view engine', 'nunjucks');
 
 // ======Render correct pages======
-app.get('/', async (req, res) => {
+app.get('/', (req, res) => {
   res.render('index.njk');
 });
 
-app.get('/info', async (req, res) => {
+app.get('/info', (req, res) => {
   res.render('info.njk');
 });
-
-// app.get('/game', async (req, res) => {
-//   res.send('/roll-a-ball/index.html');
-// });
-
-// app.get('/404', async (req, res) => {
-//   res.render('index.njk');
-// });
 
 // ======Get my public github info======
 app.get('/whoami', async (req, res) => {
@@ -48,12 +40,11 @@ app.get('/whoami', async (req, res) => {
       docs: 'https://docs.github.com/rest/reference/users#get-a-user',
     };
   }
-  fs.writeFileSync('./local-logs/githubplaintext.txt', JSON.stringify(data));
-  fs.writeFileSync('./local-logs/githubjson.json', JSON.stringify(data));
+  fs.writeFileSync('./local-logs/github.json', JSON.stringify(data));
   res.send(data);
 });
 
-app.get('/fsc', async (req, res) => {
+app.get('/otherstuff', async (req, res) => {
   let data = {};
 
   try {
@@ -72,9 +63,9 @@ app.get('/fsc', async (req, res) => {
 });
 
 app.use((req, res) => {
-  res.status(404).render(
-    '404.njk',
-  );
+  const funMessages = ['It looks like you\'ve made a wrong turn.', 'Whatever you did didn\'t work. Have you tried unplugging your computer?', 'This page doesn\'t exist. Does anything even exist?'];
+  const randomIndex = Math.floor(Math.random() * funMessages.length);
+  res.status(404).render('404.njk', { notFoundMessage: funMessages[randomIndex] });
 });
 
 app.listen(PORT, () => { console.log(`Server listening on port ${PORT}`); });
